@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, createContext, useContext } from 'react'
+import { QRCode } from 'react-qrcode-logo';
 
 type Profile = {
   id: string;
@@ -322,24 +323,25 @@ export default function App() {
                     ].join('\r\n'); // \r\n fonctionne mieux sur certains scanners
 
 
-
-                  const data = encodeURIComponent(payload);
-                  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=${data}`;
-
-                  return (
-                    <img
-                      src={qrUrl}
-                      alt="QR Adhérent"
-                      width={192}
-                      height={192}
-                      style={{
-                        background: '#fff',
-                        borderRadius: 12,
-                        border: '1px solid #5a1313',
-                        boxShadow: '0 0 12px rgba(255,255,255,0.2)',
-                      }}
-                    />
-                  );
+                    return (
+                      <div style={{ textAlign: 'center', marginTop: 10 }}>
+                        <QRCode
+                          value={payload}
+                          size={192}
+                          logoImage="/logo-bde.png" // mets le logo dans public/logo-bde.png
+                          logoWidth={50}
+                          qrStyle="dots" // pour un effet plus moderne
+                          eyeRadius={6}
+                          fgColor="#5a1313"
+                          bgColor="#ffffff"
+                          removeQrCodeBehindLogo
+                          logoOpacity={0.9}
+                        />
+                        <p style={{ marginTop: 10, color: '#5a1313', fontWeight: 600 }}>
+                          Carte d’adhérent 2025
+                        </p>
+                      </div>
+                    );
                 })()}
 
                 {/* Infos sur la carte */}
