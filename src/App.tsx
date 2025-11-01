@@ -323,7 +323,7 @@ export default function App() {
 
 
 
-                  const data = encodeURIComponent(<QRCode value={payload} />);
+                  const data = encodeURIComponent(payload);
                   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=${data}`;
 
                   return (
