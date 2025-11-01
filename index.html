@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BDE Valrose</title>
+
+    <!-- Supabase bootstrap (pré-configuré) -->
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+      window.supabase = { createClient };
+      window.__ENV__ = {
+        SUPABASE_URL: "https://nwedkwmandxwejefjrhu.supabase.co",
+        SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53ZWRrd21hbmR4d2VqZWZqcmh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2ODc0MjcsImV4cCI6MjA3NzI2MzQyN30.jBCCFRK7ke6GjVQX7xaxyqxbCw7BrEvKZqHZ0dT8kGY"
+      };
+    </script>
+
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#7f1d1d" />
+  </head>
+  <body style="margin:0">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+      }
+    </script>
+  </body>
+</html>
