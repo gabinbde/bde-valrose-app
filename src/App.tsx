@@ -314,15 +314,16 @@ export default function App() {
               <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
                 {(() => {
                   // On encode dans le QR les infos du membre
-                    const payload = `
-                    Carte BDE Valrose 2025
-                    Nom : ${profile.full_name || 'Inconnu'}
-                    Email : ${profile.email || 'Non renseigné'}
-                    Statut : ${profile.is_member ? 'Adhérent validé ✅' : 'Non adhérent ❌'}
-                    `;
+                    const payload = [
+                      'BDE Valrose – Carte 2025',
+                      `Nom : ${profile.full_name || ''}`,
+                      `Email : ${profile.email || ''}`,
+                      `Statut : ${profile.is_member ? 'Adhérent validé' : 'Non adhérent'}`
+                    ].join('\r\n'); // \r\n fonctionne mieux sur certains scanners
 
 
-                  const data = encodeURIComponent(JSON.stringify(payload));
+
+                  const data = encodeURIComponent(<QRCode value={payload} />);
                   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=${data}`;
 
                   return (
