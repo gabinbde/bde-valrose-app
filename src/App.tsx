@@ -353,19 +353,6 @@ export default function App() {
                     <b>N° adhérent</b><br />
                     {'VAL-2025-' + profile.id.slice(0, 8).toUpperCase()}
                   </div>
-                  <div style={{ marginTop: 12 }}>
-                    <Button onClick={() => window.open(
-                      `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-                        JSON.stringify({
-                          t: 'bde-valrose',
-                          uid: profile.id,
-                          member: profile.is_member,
-                          member_no: 'VAL-2025-' + profile.id.slice(0, 8).toUpperCase(),
-                        })
-                      )}`,
-                      '_blank'
-                    )}>
-                  </div>
                 </div>
               </div>
             ) : (
