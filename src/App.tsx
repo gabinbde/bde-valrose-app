@@ -314,10 +314,11 @@ export default function App() {
               <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
                 {(() => {
                   // On encode dans le QR les infos du membre
-                  const payload = {
-                    t : 'BDE Valrose',
-                    member: profile.is_member,
-                  };
+                    const payload = {
+                      nom: profile.full_name || 'Adhérent inconnu',
+                      email: profile.email,
+                      membre: profile.is_member,
+                    };
 
                   const data = encodeURIComponent(JSON.stringify(payload));
                   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=${data}`;
