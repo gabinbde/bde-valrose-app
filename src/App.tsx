@@ -473,51 +473,6 @@ export default function App() {
             </div>
           </div>
         )}
-        {/* 🟣 Fenêtre plein écran quand on clique sur "Ouvrir le QR en grand" */}
-        {showQR && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            onClick={() => setShowQR(false)} // Ferme en cliquant n'importe où
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(0,0,0,0.85)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 9999,
-              padding: 16,
-            }}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()} // Empêche de fermer en cliquant sur le QR
-              style={{
-                background: '#1b0f0f',
-                border: '1px solid #7a2a2a',
-                borderRadius: 16,
-                padding: 20,
-                textAlign: 'center',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-              }}
-            >
-              <QRCode
-                value={payload} // même variable que pour le petit QR
-                size={420}
-                logoImage="/logo-bde.png"
-                logoWidth={95}
-                fgColor="#5a1313"
-                bgColor="#ffffff"
-                qrStyle="dots"
-                eyeRadius={8}
-                removeQrCodeBehindLogo
-              />
-              <div style={{ marginTop: 12, color: '#fff' }}>
-                Appuie n’importe où pour fermer
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   
