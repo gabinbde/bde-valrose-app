@@ -141,11 +141,11 @@ export default function App() {
   const [loginError, setLoginError] = useState('');
   const [showQR, setShowQR] = useState(false);
   const payload = [
-  'BDE Valrose – Carte 2025/2026',
-  `Nom : ${profile.full_name || ''}`,
-  `Email : ${profile.email || ''}`,
-  `Statut : ${profile.is_member ? 'Adhérent validé' : 'Non adhérent'}`
-].join('\r\n');
+    'BDE Valrose – Carte 2025/2026',
+    `Nom : ${profile.full_name || ''}`,
+    `Email : ${profile.email || ''}`,
+    `Statut : ${profile.is_member ? 'Adhérent validé' : 'Non adhérent'}`
+  ].join('\r\n');
 
 
   const [search, setSearch] = useState('');
