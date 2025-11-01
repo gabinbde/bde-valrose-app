@@ -143,7 +143,6 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [adminList, setAdminList] = useState<Profile[]>([]);
   const [showAccount, setShowAccount] = useState(false);
-  import { Button, Input } from './components'; // tes imports
   // ...
 
   // 🎨 Style principal de la carte d’adhérent
