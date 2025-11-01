@@ -314,11 +314,13 @@ export default function App() {
               <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
                 {(() => {
                   // On encode dans le QR les infos du membre
-                    const payload = {
-                      nom: profile.full_name || 'Adhérent inconnu',
-                      email: profile.email,
-                      membre: profile.is_member,
-                    };
+                    const payload = `
+                    Carte BDE Valrose 2025
+                    Nom : ${profile.full_name || 'Inconnu'}
+                    Email : ${profile.email || 'Non renseigné'}
+                    Statut : ${profile.is_member ? 'Adhérent validé ✅' : 'Non adhérent ❌'}
+                    `;
+
 
                   const data = encodeURIComponent(JSON.stringify(payload));
                   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=${data}`;
