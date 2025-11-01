@@ -143,7 +143,23 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [adminList, setAdminList] = useState<Profile[]>([]);
   const [showAccount, setShowAccount] = useState(false);
-  // ...
+  type TabKey = 'nonadh' | 'card' | 'admin';
+
+  const TABS: { key: TabKey; label: string; visible: (p: any) => boolean }[] = [
+    { key: 'nonadh', label: 'Accueil', visible: (_p) => true },
+    { key: 'card', label: 'Carte', visible: (p) => !!p?.is_member },
+    { key: 'admin', label: 'Admin', visible: (p) => p?.role === 'admin' },
+  ];
+
+  const [tab, setTab] = React.useState<TabKey>('nonadh');
+
+  const visibleTabs = React.useMemo(() => TABS.filter(t => t.visible(profile)), [profile]);
+
+  React.useEffect(() => {
+    if (!visibleTabs.some(t => t.key === tab)) {
+      setTab(visibleTabs[0]?.key ?? 'nonadh');
+    }
+  }, [visibleTabs, tab]);
 
   // 🎨 Style principal de la carte d’adhérent
   const cardStyle = {
