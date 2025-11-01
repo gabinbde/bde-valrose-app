@@ -40,8 +40,8 @@ type SupaLike = {
 function makeMockClient(): SupaLike {
   let profiles: Profile[] = [
     { id: 'admin-1', email: 'admin@bde.valrose', full_name: 'Admin BDE', role: 'admin', is_member: true },
-    { id: 'user-1',  email: 'user1@etu.uc',     full_name: 'Alice Martin', role: 'user',  is_member: false },
-    { id: 'user-2',  email: 'user2@etu.uc',     full_name: 'Léo Durand',   role: 'user',  is_member: true },
+    { id: 'user-1', email: 'user1@etu.uc', full_name: 'Alice Martin', role: 'user', is_member: false },
+    { id: 'user-2', email: 'user2@etu.uc', full_name: 'Léo Durand', role: 'user', is_member: true },
   ];
   let current: Profile | null = profiles[0];
   const listeners: Array<(ev: any, s: any) => void> = [];
@@ -50,7 +50,7 @@ function makeMockClient(): SupaLike {
   return {
     auth: {
       async getSession() { return { data: { session: sessionOf(current) } }; },
-      onAuthStateChange(cb) { listeners.push(cb); return { subscription: { unsubscribe: () => {} } }; },
+      onAuthStateChange(cb) { listeners.push(cb); return { subscription: { unsubscribe: () => { } } }; },
       async signInWithOtp({ email }) {
         const p = profiles.find(x => x.email === email) || { id: 'temp', email, full_name: email, role: 'user', is_member: false } as Profile;
         current = p; listeners.forEach(fn => fn('SIGNED_IN', sessionOf(current))); return { error: null } as any;
@@ -65,7 +65,7 @@ function makeMockClient(): SupaLike {
           return {
             eq(col: string, val: string) { _eqCol = col; _eqVal = val; return this; },
             single() {
-              const rows = _eqCol ? profiles.filter((r:any) => String(r[_eqCol]) === String(_eqVal)) : profiles;
+              const rows = _eqCol ? profiles.filter((r: any) => String(r[_eqCol]) === String(_eqVal)) : profiles;
               const row = rows[0] || null;
               if (!row) return { data: null, error: { message: 'not found' } };
               return { data: row, error: null };
@@ -73,7 +73,7 @@ function makeMockClient(): SupaLike {
             order() { return this; },
             limit(n: number) { _limit = n; return this; },
             then(resolve: any) {
-              const out = profiles.slice().sort((a,b)=> (a.full_name||'').localeCompare(b.full_name||''));
+              const out = profiles.slice().sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
               resolve({ data: out.slice(0, _limit), error: null });
             }
           };
@@ -81,7 +81,7 @@ function makeMockClient(): SupaLike {
         update(val: Partial<Profile>) {
           return {
             eq(col: string, id: string) {
-              const idx = profiles.findIndex((p:any) => p[col] === id);
+              const idx = profiles.findIndex((p: any) => p[col] === id);
               if (idx >= 0) profiles[idx] = { ...profiles[idx], ...val } as Profile;
               return { error: null };
             }
@@ -103,7 +103,7 @@ function makeRealClient(): SupaLike | null {
 }
 
 const supabase: SupaLike = (() => {
-  try { const real = makeRealClient(); if (real) return real as unknown as SupaLike; } catch {}
+  try { const real = makeRealClient(); if (real) return real as unknown as SupaLike; } catch { }
   console.warn('[App] Supabase non dispo → mode MOCK');
   return makeMockClient();
 })();
@@ -116,7 +116,7 @@ function Button(props: any) {
   }}>{props.children}</button>
 }
 function Input(props: any) {
-  return <input {...props} style={{ background:'#2a0a0a', color:'#fff0f0', border:'1px solid #5a1313', borderRadius: 8, padding:'8px 10px' }} />
+  return <input {...props} style={{ background: '#2a0a0a', color: '#fff0f0', border: '1px solid #5a1313', borderRadius: 8, padding: '8px 10px' }} />
 }
 
 export default function App() {
@@ -143,6 +143,20 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [adminList, setAdminList] = useState<Profile[]>([]);
   const [showAccount, setShowAccount] = useState(false);
+  import { QRCode } from 'react-qrcode-logo';
+  import { Button, Input } from './components'; // tes imports
+  // ...
+
+  // 🎨 Style principal de la carte d’adhérent
+  const cardStyle = {
+    background: 'linear-gradient(180deg,#260f0f,#1a0b0b)',
+    border: '1px solid #5a1313',
+    borderRadius: 18,
+    boxShadow: '0 8px 28px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05)',
+    padding: 18,
+    letterSpacing: 0.2,
+    WebkitFontSmoothing: 'antialiased' as const,
+  } as const;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data?.session || null));
@@ -202,14 +216,14 @@ export default function App() {
           setProfile(me2 as Profile);
         } else {
           throw new Error('insert profile indisponible');
-       }
+        }
 
       } catch (e) {
         setProfile(null);
         // Affichage propre de l’erreur
         setLoginError((e as any)?.message || 'Erreur chargement profil');
         console.error('[profiles.load] ', e);
-     }
+      }
     })();
   }, [session]);
 
@@ -257,21 +271,21 @@ export default function App() {
   }), [adminList, search]);
 
   return (
-    <div style={{ minHeight:'100vh', background:'linear-gradient(180deg,#430808,#120101)', color:'#fff' }}>
-      <header style={{ position:'sticky', top:0, background:'rgba(67,8,8,0.6)', borderBottom:'1px solid #5a1313', backdropFilter:'blur(6px)' }}>
-        <div style={{ maxWidth:900, margin:'0 auto', padding:'10px 16px', display:'flex', alignItems:'center', gap:12 }}>
-          <div style={{ fontWeight:700 }}>BDE Valrose</div>
-          <div style={{ fontSize:12, color:'#ffcccc' }}>App adhérents — Carte uniquement</div>
-          <div style={{ marginLeft:'auto' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg,#430808,#120101)', color: '#fff' }}>
+      <header style={{ position: 'sticky', top: 0, background: 'rgba(67,8,8,0.6)', borderBottom: '1px solid #5a1313', backdropFilter: 'blur(6px)' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ fontWeight: 700 }}>BDE Valrose</div>
+          <div style={{ fontSize: 12, color: '#ffcccc' }}>App adhérents — Carte uniquement</div>
+          <div style={{ marginLeft: 'auto' }}>
             <Button onClick={() => setShowAccount(true)}>Compte</Button>
           </div>
         </div>
       </header>
 
-      <main style={{ maxWidth:900, margin:'0 auto', padding:'16px' }}>
-        <div style={{ display:'flex', gap:8, marginBottom:12 }}>
-          <Button onClick={()=>setTab('card')}>Carte</Button>
-          {isAdmin && <Button onClick={()=>setTab('admin')}>Admin</Button>}
+      <main style={{ maxWidth: 900, margin: '0 auto', padding: '16px' }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+          <Button onClick={() => setTab('card')}>Carte</Button>
+          {isAdmin && <Button onClick={() => setTab('admin')}>Admin</Button>}
         </div>
 
         {tab === 'card' && (
@@ -315,32 +329,32 @@ export default function App() {
               <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
                 {(() => {
                   // On encode dans le QR les infos du membre
-                    const payload = [
-                      'BDE Valrose – Carte 2025/2026',
-                      `Nom : ${profile.full_name || ''}`,
-                      `Email : ${profile.email || ''}`,
-                      `Statut : ${profile.is_member ? 'Adhérent validé ✅' : 'Non adhérent ❌'}`
-                    ].join('\r\n'); // \r\n fonctionne mieux sur certains scanners
+                  const payload = [
+                    'BDE Valrose – Carte 2025/2026',
+                    `Nom : ${profile.full_name || ''}`,
+                    `Email : ${profile.email || ''}`,
+                    `Statut : ${profile.is_member ? 'Adhérent validé ✅' : 'Non adhérent ❌'}`
+                  ].join('\r\n'); // \r\n fonctionne mieux sur certains scanners
 
-                    return (
-                      <div style={{ textAlign: 'center', marginTop: 10 }}>
-                        <QRCode
-                          value={payload}
-                          size={192}
-                          logoImage="/logo-bde.png" // mets le logo dans public/logo-bde.png
-                          logoWidth={50}
-                          qrStyle="dots" // pour un effet plus moderne
-                          eyeRadius={6}
-                          fgColor="#5a1313"
-                          bgColor="#ffffff"
-                          removeQrCodeBehindLogo
-                          logoOpacity={0.9}
-                        />
-                        <p style={{ marginTop: 10, color: '#5a1313', fontWeight: 600 }}>
-                          Carte d’adhérent 2025/2026
-                        </p>
-                      </div>
-                    );
+                  return (
+                    <div style={{ textAlign: 'center', marginTop: 10 }}>
+                      <QRCode
+                        value={payload}
+                        size={192}
+                        logoImage="/logo-bde.png" // mets le logo dans public/logo-bde.png
+                        logoWidth={50}
+                        qrStyle="dots" // pour un effet plus moderne
+                        eyeRadius={6}
+                        fgColor="#5a1313"
+                        bgColor="#ffffff"
+                        removeQrCodeBehindLogo
+                        logoOpacity={0.9}
+                      />
+                      <p style={{ marginTop: 10, color: '#5a1313', fontWeight: 600 }}>
+                        Carte d’adhérent 2025/2026
+                      </p>
+                    </div>
+                  );
                 })()}
 
                 {/* Infos sur la carte */}
@@ -366,26 +380,26 @@ export default function App() {
 
 
 
-        {tab==='admin' && isAdmin && (
-          <section style={{ border:'1px solid #5a1313', borderRadius:16, padding:16 }}>
+        {tab === 'admin' && isAdmin && (
+          <section style={cardStyle}>
             <h2>Panneau Admin — Adhésions</h2>
-            <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-              <Input placeholder="Rechercher (nom ou email)..." value={search} onChange={(e:any)=>setSearch(e.target.value)} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Input placeholder="Rechercher (nom ou email)..." value={search} onChange={(e: any) => setSearch(e.target.value)} />
             </div>
-            <div style={{ marginTop:12 }}>
+            <div style={{ marginTop: 12 }}>
               {filtered.map(u => (
-                <div key={u.id} style={{ display:'flex', justifyContent:'space-between', padding:'8px 0', borderBottom:'1px solid #3a0a0a' }}>
+                <div key={u.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #3a0a0a' }}>
                   <div>
-                    <div style={{ fontWeight:600 }}>{u.full_name || '—'}</div>
-                    <div style={{ fontSize:12, color:'#ffcccc' }}>{u.email} • ID: {u.id}</div>
+                    <div style={{ fontWeight: 600 }}>{u.full_name || '—'}</div>
+                    <div style={{ fontSize: 12, color: '#ffcccc' }}>{u.email} • ID: {u.id}</div>
                   </div>
-                  <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-                    <span style={{ fontSize:12, background: u.is_member ? '#0a6a2a' : '#7a1010', padding:'2px 8px', borderRadius:6 }}>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <span style={{ fontSize: 12, background: u.is_member ? '#0a6a2a' : '#7a1010', padding: '2px 8px', borderRadius: 6 }}>
                       {u.is_member ? 'Adhérent' : 'Non adhérent'}
                     </span>
                     {u.is_member
-                      ? <Button onClick={()=>adminSetMember(u.id, false)}>Retirer</Button>
-                      : <Button onClick={()=>adminSetMember(u.id, true)}>Valider</Button>}
+                      ? <Button onClick={() => adminSetMember(u.id, false)}>Retirer</Button>
+                      : <Button onClick={() => adminSetMember(u.id, true)}>Valider</Button>}
                   </div>
                 </div>
               ))}
