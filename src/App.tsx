@@ -139,6 +139,14 @@ export default function App() {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginInfo, setLoginInfo] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [showQR, setShowQR] = useState(false);
+  const payload = [
+  'BDE Valrose – Carte 2025/2026',
+  `Nom : ${profile.full_name || ''}`,
+  `Email : ${profile.email || ''}`,
+  `Statut : ${profile.is_member ? 'Adhérent validé' : 'Non adhérent'}`
+].join('\r\n');
+
 
   const [search, setSearch] = useState('');
   const [adminList, setAdminList] = useState<Profile[]>([]);
@@ -322,7 +330,6 @@ export default function App() {
                       `Statut : ${profile.is_member ? 'Adhérent validé ✅' : 'Non adhérent ❌'}`
                     ].join('\r\n'); // \r\n fonctionne mieux sur certains scanners
 
-
                     return (
                       <div style={{ textAlign: 'center', marginTop: 10 }}>
                         <QRCode
@@ -338,8 +345,9 @@ export default function App() {
                           logoOpacity={0.9}
                         />
                         <p style={{ marginTop: 10, color: '#5a1313', fontWeight: 600 }}>
-                          Carte d’adhérent 2025
+                          Carte d’adhérent 2025/2026
                         </p>
+                        <Button onClick={() => setShowQR(true)}>Ouvrir le QR en grand</Button>
                       </div>
                     );
                 })()}
@@ -347,7 +355,7 @@ export default function App() {
                 {/* Infos sur la carte */}
                 <div style={{ lineHeight: 1.6 }}>
                   <div><b>Nom</b><br />{profile.full_name || '—'}</div>
-                  <div><b>Statut</b><br />Adhérent 2025–2026</div>
+                  <div><b>Statut</b><br />Adhérent 2025/2026</div>
                   <div><b>Email</b><br />{profile.email}</div>
                   <div><b>ID</b><br />{profile.id}</div>
                   <div>
@@ -472,8 +480,53 @@ export default function App() {
             </div>
           </div>
         )}
-
+        {/* 🟣 Fenêtre plein écran quand on clique sur "Ouvrir le QR en grand" */}
+        {showQR && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            onClick={() => setShowQR(false)} // Ferme en cliquant n'importe où
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(0,0,0,0.85)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              padding: 16,
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()} // Empêche de fermer en cliquant sur le QR
+              style={{
+                background: '#1b0f0f',
+                border: '1px solid #7a2a2a',
+                borderRadius: 16,
+                padding: 20,
+                textAlign: 'center',
+                boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+              }}
+            >
+              <QRCode
+                value={payload} // même variable que pour le petit QR
+                size={420}
+                logoImage="/logo-bde.png"
+                logoWidth={95}
+                fgColor="#5a1313"
+                bgColor="#ffffff"
+                qrStyle="dots"
+                eyeRadius={8}
+                removeQrCodeBehindLogo
+              />
+              <div style={{ marginTop: 12, color: '#fff' }}>
+                Appuie n’importe où pour fermer
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
+  
   )
 }
