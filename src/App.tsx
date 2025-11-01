@@ -143,7 +143,6 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [adminList, setAdminList] = useState<Profile[]>([]);
   const [showAccount, setShowAccount] = useState(false);
-  import { QRCode } from 'react-qrcode-logo';
   import { Button, Input } from './components'; // tes imports
   // ...
 
