@@ -315,10 +315,10 @@ export default function App() {
                 {(() => {
                   // On encode dans le QR les infos du membre
                     const payload = [
-                      'BDE Valrose – Carte 2025',
+                      'BDE Valrose – Carte 2025/2026',
                       `Nom : ${profile.full_name || ''}`,
                       `Email : ${profile.email || ''}`,
-                      `Statut : ${profile.is_member ? 'Adhérent validé' : 'Non adhérent'}`
+                      `Statut : ${profile.is_member ? 'Adhérent validé ✅' : 'Non adhérent ❌'}`
                     ].join('\r\n'); // \r\n fonctionne mieux sur certains scanners
 
 
